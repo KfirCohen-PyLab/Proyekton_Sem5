@@ -94,7 +94,7 @@ public class LoanController {
 
 		// Limit barcode input to 13 characters
 		BarcodeText.setTextFormatter(new TextFormatter<String>(change -> {
-			if (change.getControlNewText().length() <= 13) {
+			if (change.getControlNewText().matches("\\d{0,13}")) {
 				return change; // Allow the input if it's 13 characters or less
 			}
 			return null; // Reject input if it's more than 13 characters
@@ -130,19 +130,26 @@ public class LoanController {
 	@FXML
 	private void BarcodeScan(ActionEvent event) {
 		String enteredBarcode = BarcodeText.getText().trim();
-		if (enteredBarcode.length() == 13 && bookMap.containsKey(enteredBarcode)) {
-			String bookName = bookMap.get(enteredBarcode);
-			BooksList.getSelectionModel().select(bookName);
-			BooksList.scrollTo(bookName);
-
-			// if (bookMap.containsKey(enteredBarcode)) {
-			// String bookName = bookMap.get(enteredBarcode);
-			// BooksList.getSelectionModel().select(bookName);
-			// BooksList.scrollTo(bookName); // Ensure the selected book is visible
-		} else {
-			Alert alert = new Alert(Alert.AlertType.WARNING, "No book found for the entered barcode.", ButtonType.OK);
-			alert.showAndWait();
-		}
+		
+		if (enteredBarcode.length() < 13) {
+	        // Show error message if the barcode is incomplete
+	        showError("Book's barcode must be 13 digits long.");
+	    } else {
+	    	
+	    	if (enteredBarcode.length() == 13 && bookMap.containsKey(enteredBarcode)) {
+				String bookName = bookMap.get(enteredBarcode);
+				BooksList.getSelectionModel().select(bookName);
+				BooksList.scrollTo(bookName);
+				// Perform save action here
+		        System.out.println("Book's barcode is: " + enteredBarcode);
+		        // Additional logic for saving the barcode...
+			}
+	    	else {
+				Alert alert = new Alert(Alert.AlertType.WARNING, "No book found for the entered barcode.", ButtonType.OK);
+				alert.showAndWait();
+			}
+	    }
+			
 	}
 
 	// Method called when the "Exit" button is clicked
@@ -158,5 +165,28 @@ public class LoanController {
 	public void getBackBtn(ActionEvent event) throws Exception {
 		// Implement logic to switch back to the previous screen
 		switchScreen.switchTo(event, "/gui/OptionFrame", "Back");
+	}
+	
+	@FXML
+	public void SaveLoanerID(ActionEvent event) throws Exception {
+	    // Check if the subscriber ID is less than 9 characters
+	    String subscriberID = subscriberIDText.getText();
+	    if (subscriberID.length() < 9) {
+	        // Show error message if the ID is incomplete
+	        showError("Subscriber ID must be 9 digits long.");
+	    } else {
+	        // Perform save action here
+	        System.out.println("Subscriber ID saved: " + subscriberID);
+	        // Additional logic for saving the ID...
+	    }
+	}
+
+	// Helper method to show error messages
+	private void showError(String message) {
+	    Alert alert = new Alert(Alert.AlertType.ERROR);
+	    alert.setTitle("Error");
+	    alert.setHeaderText(null);
+	    alert.setContentText(message);
+	    alert.showAndWait();
 	}
 }
