@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="613.0" prefWidth="696.0"
+	xmlns="http://javafx.com/javafx/23.0.1"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="gui.OptionFrameController">
+	<children>
+		<Button id="btnExit" fx:id="btnExit" layoutX="607.0"
+			layoutY="550.0" mnemonicParsing="false" onAction="#getExitBtn"
+			prefHeight="36.0" prefWidth="65.0" text="Exit" />
+		<Label layoutX="164.0" layoutY="22.0" prefHeight="44.0"
+			prefWidth="220.0" text="Choose Option" textOverrun="CENTER_ELLIPSIS" />
+		<Button fx:id="btnData" layoutX="171.0" layoutY="428.0"
+			mnemonicParsing="false" onAction="#btnData" prefHeight="61.0"
+			prefWidth="354.0" text="Show Information of DB" />
+		<Button fx:id="btnUptade" layoutX="166.0" layoutY="328.0"
+			mnemonicParsing="false" onAction="#getUpdateBtn" prefHeight="61.0"
+			prefWidth="354.0" text="Uptade your Information " />
+		<Button fx:id="btnLoan" layoutX="343.0" layoutY="22.0"
+			mnemonicParsing="false" onAction="#btnLoan" text="Loan" />
+		<Button fx:id="btnSearch" layoutX="166.0" layoutY="238.0"
+			mnemonicParsing="false" onAction="#btnSearch" prefHeight="61.0"
+			prefWidth="354.0" text="Search " />
+	</children>
+</AnchorPane>

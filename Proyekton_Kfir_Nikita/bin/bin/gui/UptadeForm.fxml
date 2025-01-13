@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="358.0" prefWidth="549.0"
+	xmlns="http://javafx.com/javafx/23.0.1"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="gui.UpdateInfoController">
+	<children>
+		<Label id="lblName" layoutX="34.0" layoutY="120.0"
+			text="Phome number" />
+		<Label id="lblSurname" layoutX="34.0" layoutY="164.0"
+			text="Email" />
+		<TextField id="lblName" fx:id="txtPhoneNumber"
+			layoutX="126.0" layoutY="116.0" prefHeight="25.0" prefWidth="195.0" />
+		<TextField id="lblSurname" fx:id="txtEmail" layoutX="126.0"
+			layoutY="160.0" prefHeight="25.0" prefWidth="332.0" />
+		<Button fx:id="btnsend" layoutX="34.0" layoutY="264.0"
+			mnemonicParsing="false" onAction="#getsendbtn" prefHeight="54.0"
+			prefWidth="82.0" text="Send" />
+		<Button fx:id="btnclose" layoutX="432.0" layoutY="264.0"
+			mnemonicParsing="false" onAction="#btnclose" prefHeight="54.0"
+			prefWidth="82.0" text="Close" />
+		<Label layoutX="35.0" layoutY="67.0" text="ID" />
+		<TextField id="lblName" fx:id="txtId" layoutX="126.0"
+			layoutY="63.0" prefHeight="25.0" prefWidth="195.0" />
+		<Label fx:id="info" layoutX="75.0" layoutY="203.0"
+			prefHeight="41.0" prefWidth="378.0" />
+	</children>
+</AnchorPane>
