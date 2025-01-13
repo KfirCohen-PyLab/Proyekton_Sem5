@@ -7,19 +7,36 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="615.0" prefWidth="587.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LoanController">
+<AnchorPane prefHeight="615.0" prefWidth="587.0"
+	xmlns="http://javafx.com/javafx/23.0.1"
+	xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LoanController">
 	<children>
-		<Button id="btnExit" fx:id="btnExit" layoutX="538.0" layoutY="576.0" mnemonicParsing="false" onAction="#getExitBtn" text="Exit" />
-		<Button id="btnExit" fx:id="btnExit1" layoutX="24.0" layoutY="576.0" mnemonicParsing="false" onAction="#getExitBtn" text="Back" />
-		<ListView fx:id="BooksList" fixedCellSize="20.0" layoutX="28.0" layoutY="31.0" prefHeight="531.0" prefWidth="214.0" />
-		<Button fx:id="BtnBarcode" layoutX="369.0" layoutY="284.0" mnemonicParsing="false" onAction="#BarcodeScan" prefHeight="25.0" prefWidth="70.0" text="Barcode" />
-		<Label layoutX="252.0" layoutY="33.0" prefHeight="25.0" prefWidth="70.0" text="loaner ID:" />
-		<Label layoutX="252.0" layoutY="66.0" prefHeight="25.0" prefWidth="70.0" text="loan date:" />
-		<Label layoutX="252.0" layoutY="100.0" prefHeight="25.0" prefWidth="70.0" text="return date:" />
+		<Button id="btnExit" fx:id="btnExit" layoutX="538.0"
+			layoutY="576.0" mnemonicParsing="false" onAction="#getExitBtn"
+			text="Exit" />
+		<Button id="btnExit" fx:id="btnExit1" layoutX="24.0"
+			layoutY="576.0" mnemonicParsing="false" onAction="#getExitBtn"
+			text="Back" />
+		<ListView fx:id="BooksList" fixedCellSize="20.0"
+			layoutX="28.0" layoutY="31.0" prefHeight="531.0" prefWidth="214.0" />
+		<Button fx:id="BtnBarcode" layoutX="369.0" layoutY="284.0"
+			mnemonicParsing="false" onAction="#BarcodeScan" prefHeight="25.0"
+			prefWidth="70.0" text="Barcode" />
+		<Label layoutX="252.0" layoutY="33.0" prefHeight="25.0"
+			prefWidth="70.0" text="loaner ID:" />
+		<Label layoutX="252.0" layoutY="66.0" prefHeight="25.0"
+			prefWidth="70.0" text="loan date:" />
+		<Label layoutX="252.0" layoutY="100.0" prefHeight="25.0"
+			prefWidth="70.0" text="return date:" />
 		<DatePicker fx:id="loandate" layoutX="329.0" layoutY="66.0" />
-		<DatePicker fx:id="retunrdate" layoutX="329.0" layoutY="100.0" />
-      <TextField fx:id="BarcodeText" layoutX="324.0" layoutY="233.0" prefHeight="36.0" prefWidth="174.0" promptText="enter book barcode here" />
-      <Button fx:id="BtnSaveLoaner" layoutX="383.0" layoutY="144.0" mnemonicParsing="false" text="Save" />
-      <Label fx:id="BooksListLabel" layoutX="93.0" layoutY="14.0" text="Available Books" />
+		<DatePicker fx:id="retunrdate" layoutX="329.0"
+			layoutY="100.0" />
+		<TextField fx:id="BarcodeText" layoutX="324.0"
+			layoutY="233.0" prefHeight="36.0" prefWidth="174.0"
+			promptText="enter book barcode here" />
+		<Button fx:id="BtnSaveLoaner" layoutX="383.0" layoutY="144.0"
+			mnemonicParsing="false" text="Save" />
+		<Label fx:id="BooksListLabel" layoutX="93.0" layoutY="14.0"
+			text="Available Books" />
 	</children>
 </AnchorPane>

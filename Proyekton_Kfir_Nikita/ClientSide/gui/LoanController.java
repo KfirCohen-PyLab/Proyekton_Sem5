@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import GUI_Handler.switchScreen;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -17,7 +18,10 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 import javafx.util.StringConverter;
+
 public class LoanController {
 
 	@FXML
@@ -25,28 +29,28 @@ public class LoanController {
 
 	@FXML
 	private Button btnExit1; // Back button
-	
+
 	@FXML
 	private Button BtnSaveLoaner; // Save loaner details Book, ID, Dates
-	
+
 	@FXML
 	private DatePicker loandate; // Loan date picker
 
 	@FXML
 	private DatePicker retunrdate; // Return date picker
-	
+
 	@FXML
 	private Button BtnBarcode;
-	
-    @FXML
-    private ListView<String> BooksList;
-    
-    @FXML
-    private TextField BarcodeText;
-	
+
+	@FXML
+	private ListView<String> BooksList;
+
+	@FXML
+	private TextField BarcodeText;
+
 	@FXML
 	// Map to store book barcodes and their corresponding names
-    private final Map<String, String> bookMap = new HashMap<>();
+	private final Map<String, String> bookMap = new HashMap<>();
 
 	@FXML
 	public void initialize() {
@@ -58,31 +62,34 @@ public class LoanController {
 		// Set the return date as two weeks from today and configure its formatter
 		retunrdate.setValue(LocalDate.now().plusWeeks(2));
 		retunrdate.setConverter(createDateConverter());
-		
-		bookMap.put("9780061120084", "To Kill a Mockingbird – Harper Lee");
-        bookMap.put("9780141439518", "Pride and Prejudice – Jane Austen");
-        bookMap.put("9780451524935", "1984 – George Orwell");
-        bookMap.put("9780743273565", "The Great Gatsby – F. Scott Fitzgerald");
-        bookMap.put("9781503280786", "Moby-Dick – Herman Melville");
-        bookMap.put("9780141441146", "Jane Eyre – Charlotte Brontë");
-        bookMap.put("9780141439556", "Wuthering Heights – Emily Brontë");
-        bookMap.put("9780316769488", "The Catcher in the Rye – J.D. Salinger");
-        bookMap.put("9780486415871", "Crime and Punishment – Fyodor Dostoevsky");
-        bookMap.put("9780060850524", "Brave New World – Aldous Huxley");
-        // Populate the ListView with book names
-        BooksList.getItems().addAll(bookMap.values());
-        
-        
-        // Limit barcode input to 13 characters
-        BarcodeText.setTextFormatter(new TextFormatter<String>(change -> {
-            if (change.getControlNewText().length() <= 13) {
-                return change; // Allow the input if it's 13 characters or less
-            }
-            return null; // Reject input if it's more than 13 characters
-        }));
-    }
-		
 
+		bookMap.put("9780061120084", "To Kill a Mockingbird – Harper Lee");
+		bookMap.put("9780141439518", "Pride and Prejudice – Jane Austen");
+		bookMap.put("9780451524935", "1984 – George Orwell");
+		bookMap.put("9780743273565", "The Great Gatsby – F. Scott Fitzgerald");
+		bookMap.put("9781503280786", "Moby-Dick – Herman Melville");
+		bookMap.put("9780141441146", "Jane Eyre – Charlotte Brontë");
+		bookMap.put("9780141439556", "Wuthering Heights – Emily Brontë");
+		bookMap.put("9780316769488", "The Catcher in the Rye – J.D. Salinger");
+		bookMap.put("9780486415871", "Crime and Punishment – Fyodor Dostoevsky");
+		bookMap.put("9780060850524", "Brave New World – Aldous Huxley");
+		// Populate the ListView with book names
+		BooksList.getItems().addAll(bookMap.values());
+
+		// Limit barcode input to 13 characters
+		BarcodeText.setTextFormatter(new TextFormatter<String>(change -> {
+			if (change.getControlNewText().length() <= 13) {
+				return change; // Allow the input if it's 13 characters or less
+			}
+			return null; // Reject input if it's more than 13 characters
+		}));
+
+		// change the screen loan icon to be group 6 icon from Internet URL
+		Platform.runLater(() -> {
+			Stage stage = (Stage) loandate.getScene().getWindow();
+			stage.getIcons().add(new Image("https://www.group6international.com/images/favicon.png"));
+		});
+	}
 
 	// Creates a StringConverter for DatePicker
 	private StringConverter<LocalDate> createDateConverter() {
@@ -102,24 +109,24 @@ public class LoanController {
 	}
 
 	// Method called when the "Barcode" button is clicked
-		// Implement this method if required
-		@FXML
-		private void BarcodeScan(ActionEvent event) {
-			String enteredBarcode = BarcodeText.getText().trim();
-			if (enteredBarcode.length() == 13 && bookMap.containsKey(enteredBarcode)) {
-	            String bookName = bookMap.get(enteredBarcode);
-	            BooksList.getSelectionModel().select(bookName);
-	            BooksList.scrollTo(bookName);
-			
-			//if (bookMap.containsKey(enteredBarcode)) {
-	         //   String bookName = bookMap.get(enteredBarcode);
-	        //    BooksList.getSelectionModel().select(bookName);
-	         //   BooksList.scrollTo(bookName);  // Ensure the selected book is visible
-	        } else {
-	            Alert alert = new Alert(Alert.AlertType.WARNING, "No book found for the entered barcode.", ButtonType.OK);
-	            alert.showAndWait();
-	        }
-    }
+	// Implement this method if required
+	@FXML
+	private void BarcodeScan(ActionEvent event) {
+		String enteredBarcode = BarcodeText.getText().trim();
+		if (enteredBarcode.length() == 13 && bookMap.containsKey(enteredBarcode)) {
+			String bookName = bookMap.get(enteredBarcode);
+			BooksList.getSelectionModel().select(bookName);
+			BooksList.scrollTo(bookName);
+
+			// if (bookMap.containsKey(enteredBarcode)) {
+			// String bookName = bookMap.get(enteredBarcode);
+			// BooksList.getSelectionModel().select(bookName);
+			// BooksList.scrollTo(bookName); // Ensure the selected book is visible
+		} else {
+			Alert alert = new Alert(Alert.AlertType.WARNING, "No book found for the entered barcode.", ButtonType.OK);
+			alert.showAndWait();
+		}
+	}
 
 	// Method called when the "Exit" button is clicked
 	// Switches back to the Exit screen
