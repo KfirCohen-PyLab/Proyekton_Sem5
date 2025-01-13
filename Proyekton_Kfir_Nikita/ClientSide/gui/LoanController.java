@@ -49,6 +49,9 @@ public class LoanController {
 	private TextField BarcodeText;
 
 	@FXML
+	private TextField subscriberIDText;
+
+	@FXML
 	// Map to store book barcodes and their corresponding names
 	private final Map<String, String> bookMap = new HashMap<>();
 
@@ -76,6 +79,19 @@ public class LoanController {
 		// Populate the ListView with book names
 		BooksList.getItems().addAll(bookMap.values());
 
+		// Limit subscriber ID input to 9 numeric characters only
+		subscriberIDText.setTextFormatter(new TextFormatter<String>(change -> {
+			String newText = change.getControlNewText();
+
+			// Allow input only if it's numeric and 9 characters or less
+			if (newText.matches("\\d{0,9}")) {
+				return change; // Allow valid input
+
+			}
+
+			return null; // Reject invalid input
+		}));
+
 		// Limit barcode input to 13 characters
 		BarcodeText.setTextFormatter(new TextFormatter<String>(change -> {
 			if (change.getControlNewText().length() <= 13) {
@@ -87,7 +103,8 @@ public class LoanController {
 		// change the screen loan icon to be group 6 icon from Internet URL
 		Platform.runLater(() -> {
 			Stage stage = (Stage) loandate.getScene().getWindow();
-			stage.getIcons().add(new Image("https://www.group6international.com/images/favicon.png"));
+			stage.getIcons().add(new Image(
+					"https://spinninrecords.com/uploads/profile/images/1e/c4/74/b1/1ec474b14cf442989a3b30f3835865ff.png?1607347164"));
 		});
 	}
 
