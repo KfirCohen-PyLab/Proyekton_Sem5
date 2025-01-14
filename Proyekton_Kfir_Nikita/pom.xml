@@ -44,7 +44,11 @@
 			<artifactId>javafx-fxml</artifactId>
 			<version>${javafx.version}</version>
 		</dependency>
-
+		<dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		    <version>8.0.23</version> <!-- You can use the latest version -->
+		</dependency>
 		<!-- Optional: Logging Dependency -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
