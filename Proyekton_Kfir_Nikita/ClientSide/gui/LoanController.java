@@ -86,7 +86,6 @@ public class LoanController {
 			// Allow input only if it's numeric and 9 characters or less
 			if (newText.matches("\\d{0,9}")) {
 				return change; // Allow valid input
-
 			}
 
 			return null; // Reject invalid input
