@@ -21,18 +21,36 @@ public class dbHandler {
         }
     }
 
-    // Process loan request with parameters
+ // Process loan request with parameters
     public static void processLoanRequest(int subscriberID, int barcode, String loanDate, String returnDate) throws SQLException {
-        String query = "INSERT INTO Loans (subscriber_id, book_barcode, loan_date, return_date) VALUES (?, ?, ?, ?)";
+        // Check if the book is available
+        String availabilityQuery = "SELECT status FROM Books WHERE book_id = ?";
+        String updateQuery = "UPDATE Books SET status = 'borrowed', borrower_id = ?, return_date = ? WHERE book_id = ?";
 
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, subscriberID);
-            stmt.setInt(2, barcode);
-            stmt.setString(3, loanDate);
-            stmt.setString(4, returnDate);
-            stmt.executeUpdate();
+        try (PreparedStatement checkStmt = conn.prepareStatement(availabilityQuery)) {
+            checkStmt.setInt(1, barcode);
+            ResultSet rs = checkStmt.executeQuery();
+
+            if (rs.next()) {
+                String status = rs.getString("status");
+                if ("available".equalsIgnoreCase(status)) {
+                    // Update the book status
+                    try (PreparedStatement updateStmt = conn.prepareStatement(updateQuery)) {
+                        updateStmt.setInt(1, subscriberID);
+                        updateStmt.setString(2, returnDate);
+                        updateStmt.setInt(3, barcode);
+                        updateStmt.executeUpdate();
+                        System.out.println("Loan request processed successfully.");
+                    }
+                } else {
+                    System.out.println("Book is not available for loan.");
+                }
+            } else {
+                System.out.println("Book with the provided barcode does not exist.");
+            }
         }
     }
+
 
     // Handle messages from the client
     public static ArrayList<String> MessageHandler(ArrayList<String> msg) throws SQLException {
@@ -59,12 +77,11 @@ public class dbHandler {
                 break;
 
             case "loanRequest":
-                // Process loan request with parameters
-                int loanSubscriberID = Integer.parseInt(msg.get(1)); // Extract subscriber ID
-                int loanBarcode = Integer.parseInt(msg.get(2)); // Extract book barcode
-                String loanDate = msg.get(3); // Extract loan date
-                String returnDate = msg.get(4); // Extract return date
-                processLoanRequest(loanSubscriberID, loanBarcode, loanDate, returnDate);  // Process loan request
+                int loanSubscriberID = Integer.parseInt(msg.get(1));
+                int loanBarcode = Integer.parseInt(msg.get(2));
+                String loanDate = msg.get(3);
+                String returnDate = msg.get(4);
+                processLoanRequest(loanSubscriberID, loanBarcode, loanDate, returnDate);
                 response.add("Loan request processed successfully.");
                 break;
 
