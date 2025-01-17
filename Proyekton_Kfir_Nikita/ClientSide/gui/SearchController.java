@@ -110,28 +110,19 @@ public class SearchController implements Initializable {
 	public void getsendbtn1(ActionEvent event) throws Exception {
 		dataToSend = Subscriber_Handler.DbSerachData("book_name", getName());
 		ClientUI.chat.accept(dataToSend);
+		ObservableList<Book_type_available> Newlist = FXCollections.observableArrayList();
 		if (ChatClient.answer.equals("good")) {
-			ObservableList<Book_type_available> NewAvailable = FXCollections.observableArrayList();
 			if (ChatClient.listAvailable.size() != 0) {
-				for (int i = 0; i < (ChatClient.listAvailable.size() / 2); i++) {
-					// Loop through the list and construct the string for each subscriber
-					String name = ChatClient.listAvailable.get(i * 2);
-					String location = ChatClient.listAvailable.get((i * 2) + 1);
-					NewAvailable.add(new Book_type_available(name, location, null));
-				}
-				table.setItems(NewAvailable);
+				Newlist = Subscriber_Handler.DbBookSearchAvailable(ChatClient.listAvailable);
+				table.setItems(Newlist);
+				info.setText("Found!");
 			} else {
-				if (ChatClient.listBorrowed.size() != 0)
-					for (int i = 0; i < (ChatClient.listBorrowed.size() / 2); i++) {
-						// Loop through the list and construct the string for each subscriber
-						String name = ChatClient.listBorrowed.get(i * 2);
-						String borrowed = ChatClient.listBorrowed.get((i * 2) + 1);
-						NewAvailable.add(new Book_type_available(name, null, borrowed));
-					}
-				table.setItems(NewAvailable);
+				Newlist = Subscriber_Handler.DbBookSearchBorrowed(ChatClient.listBorrowed);
+				table.setItems(Newlist);
+				info.setText("Found!");
 			}
 		} else {
-			info.setText("Error, Data couldn't be found in DB, Check your inputs");
+			info.setText("Error, Data couldn't be found in DB, Check your input");
 		}
 	}
 
@@ -139,28 +130,19 @@ public class SearchController implements Initializable {
 
 		dataToSend = Subscriber_Handler.DbSerachData("book_subjects", getSubject());
 		ClientUI.chat.accept(dataToSend);
+		ObservableList<Book_type_available> Newlist = FXCollections.observableArrayList();
 		if (ChatClient.answer.equals("good")) {
-			ObservableList<Book_type_available> NewAvailable = FXCollections.observableArrayList();
 			if (ChatClient.listAvailable.size() != 0) {
-				for (int i = 0; i < (ChatClient.listAvailable.size() / 2); i++) {
-					// Loop through the list and construct the string for each subscriber
-					String name = ChatClient.listAvailable.get(i * 2);
-					String location = ChatClient.listAvailable.get((i * 2) + 1);
-					NewAvailable.add(new Book_type_available(name, location, null));
-				}
-				table.setItems(NewAvailable);
+				Newlist = Subscriber_Handler.DbBookSearchAvailable(ChatClient.listAvailable);
+				table.setItems(Newlist);
+				info.setText("Found!");
 			} else {
-				if (ChatClient.listBorrowed.size() != 0)
-					for (int i = 0; i < (ChatClient.listBorrowed.size() / 2); i++) {
-						// Loop through the list and construct the string for each subscriber
-						String name = ChatClient.listBorrowed.get(i * 2);
-						String borrowed = ChatClient.listBorrowed.get((i * 2) + 1);
-						NewAvailable.add(new Book_type_available(name, null, borrowed));
-					}
-				table.setItems(NewAvailable);
+				Newlist = Subscriber_Handler.DbBookSearchBorrowed(ChatClient.listBorrowed);
+				table.setItems(Newlist);
+				info.setText("Found!");
 			}
 		} else {
-			info.setText("Error, Data couldn't be found in DB, Check your inputs");
+			info.setText("Error, Data couldn't be found in DB, Check your input");
 		}
 	}
 
@@ -168,28 +150,19 @@ public class SearchController implements Initializable {
 
 		dataToSend = Subscriber_Handler.DbSerachData("book_description", getInfo());
 		ClientUI.chat.accept(dataToSend);
+		ObservableList<Book_type_available> Newlist = FXCollections.observableArrayList();
 		if (ChatClient.answer.equals("good")) {
-			ObservableList<Book_type_available> NewAvailable = FXCollections.observableArrayList();
 			if (ChatClient.listAvailable.size() != 0) {
-				for (int i = 0; i < (ChatClient.listAvailable.size() / 2); i++) {
-					// Loop through the list and construct the string for each subscriber
-					String name = ChatClient.listAvailable.get(i * 2);
-					String location = ChatClient.listAvailable.get((i * 2) + 1);
-					NewAvailable.add(new Book_type_available(name, location, null));
-				}
-				table.setItems(NewAvailable);
+				Newlist = Subscriber_Handler.DbBookSearchAvailable(ChatClient.listAvailable);
+				table.setItems(Newlist);
+				info.setText("Found!");
 			} else {
-				if (ChatClient.listBorrowed.size() != 0)
-					for (int i = 0; i < (ChatClient.listBorrowed.size() / 2); i++) {
-						// Loop through the list and construct the string for each subscriber
-						String name = ChatClient.listBorrowed.get(i * 2);
-						String borrowed = ChatClient.listBorrowed.get((i * 2) + 1);
-						NewAvailable.add(new Book_type_available(name, null, borrowed));
-					}
-				table.setItems(NewAvailable);
+				Newlist = Subscriber_Handler.DbBookSearchBorrowed(ChatClient.listBorrowed);
+				table.setItems(Newlist);
+				info.setText("Found!");
 			}
 		} else {
-			info.setText("Error, Data couldn't be found in DB, Check your inputs");
+			info.setText("Error, Data couldn't be found in DB, Check your input");
 		}
 	}
 }

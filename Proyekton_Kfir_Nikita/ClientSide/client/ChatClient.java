@@ -49,6 +49,8 @@ public class ChatClient extends AbstractClient {
 	 * provide feedback or status messages to the client.
 	 */
 	public static String answer;
+
+	public static String status;
 	// Constructors ****************************************************
 
 	/**
@@ -78,9 +80,11 @@ public class ChatClient extends AbstractClient {
 		if (msg instanceof ArrayList<?>) {
 			ArrayList<?> list_2 = (ArrayList<?>) msg;
 			switch ((String) list_2.get(0)) {
-			case "0":
+			case "admin":
+				status = "admin";
 				break;
-			case "1":
+			case "active":
+				status = "active";
 				break;
 			case "books":
 				answer = "good";
@@ -95,8 +99,6 @@ public class ChatClient extends AbstractClient {
 						listAvailable.add((String) list_2.get((i * 5) + 4));
 					}
 				}
-				System.out.println("bor:" + listBorrowed);
-				System.out.println("ava:" + listAvailable);
 				break;
 			case "good":
 				answer = "Information has been sent";
@@ -114,6 +116,9 @@ public class ChatClient extends AbstractClient {
 					list.add((String) list_2.get((i * 8) + 4));
 					list.add((String) list_2.get((i * 8) + 5));
 				}
+				break;
+			case "Wrong Credentials":
+				answer = "Wrong Credentials";
 				break;
 			default:
 				break;

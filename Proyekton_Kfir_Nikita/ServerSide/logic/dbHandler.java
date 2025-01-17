@@ -1,107 +1,282 @@
 package logic;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class dbHandler {
 
-    private static Connection conn;
+	static Connection conn;
 
-    // Connect to the database
-    public static void ConnectDB() {
-        try {
-            String url = "jdbc:mysql://localhost/project?serverTimezone=IST&useSSL=false&allowPublicKeyRetrieval=true"; // Database URL
-            String username = "root"; // Your database username
-            String password = "Aa123456"; // Your database password
-            conn = DriverManager.getConnection(url, username, password);
-            System.out.println("Connected to the database.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("ERROR - Could not connect to the database.");
-        }
-    }
+	public static void ConnectDB() {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+			System.out.println("Driver definition succeed");
+		} catch (Exception ex) {
+			/* handle the error */
+			System.out.println("Driver definition failed");
+		}
 
-    // Process loan request with parameters
-    public static void processLoanRequest(int subscriberID, int barcode , String loanDate, String returnDate, String bookName) throws SQLException {
-        String query = "UPDATE books set(book_id, book_name, book_subjects, borrower_id, book_id, loan_date, return_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		try {
+			conn = DriverManager.getConnection(
+					"jdbc:mysql://localhost/project?serverTimezone=IST&useSSL=false&allowPublicKeyRetrieval=true",
+					"root", "Aa123456");
 
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, barcode);
-            stmt.setString(2, bookName);
-            stmt.setString(3, loanDate);
-            stmt.setString(4, returnDate);
-            stmt.setInt(6, subscriberID);
-            stmt.executeUpdate();
-        }
-    }
+			System.out.println("SQL connection succeed");
+		} catch (SQLException ex) {/* handle any errors */
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+		}
+	}
 
-    // Handle messages from the client
-    public static ArrayList<String> MessageHandler(ArrayList<String> msg) throws SQLException {
-        ArrayList<String> response = new ArrayList<>();
-        
-        if (msg == null || msg.isEmpty()) {
-            response.add("Invalid message");
-            return response;
-        }
+	private static ArrayList<String> Fail(ArrayList<String> fail) {
+		fail.add("fail");
+		return fail;
+	}
 
-        // Process different types of messages
-        String action = msg.get(0);
+	public static ArrayList<String> MessageHandler(ArrayList<String> inputs) throws SQLException {
 
-        switch (action) {
-            case "getAvailableBooks":
-                response.addAll(getAvailableBooks());  // Retrieve list of available books
-                break;
+		ArrayList<String> Response = new ArrayList<>();
 
-            case "borrowBook":
-                int bookId = Integer.parseInt(msg.get(1));  // Book ID
-                int subscriberId = Integer.parseInt(msg.get(2));  // Subscriber ID
-                updateBookStatus(bookId, "borrowed", subscriberId);  // Update book status to borrowed
-                response.add("Book borrowed successfully.");
-                break;
+		if (!inputs.isEmpty()) {
+			// Access which action to do
+			String actionString = inputs.get(0);
 
-            case "loanRequest":
-                // Process loan request with parameters
-                int loanSubscriberID = Integer.parseInt(msg.get(1)); // Extract subscriber ID
-                int loanBarcode = Integer.parseInt(msg.get(2)); // Extract book barcode
-                String loanDate = msg.get(3); // Extract loan date
-                String returnDate = msg.get(4); // Extract return date
-                String bookName = msg.get(5);
-                processLoanRequest(loanSubscriberID, loanBarcode, loanDate, returnDate, bookName);  // Process loan request
-                response.add("Loan request processed successfully.");
-                break;
+			// Handle the value of the first string using switch-case
+			switch (actionString) {
+			case "0": // login
+				// return Login(inputs);
+				Response.add("200ok");
+				return Response;
 
-            default:
-                response.add("Unknown action: " + action);
-        }
+			case "1": // change data
 
-        return response;
-    }
+				return UpdateInfo(inputs);
 
-    // Get list of available books from the database
-    private static ArrayList<String> getAvailableBooks() throws SQLException {
-        ArrayList<String> books = new ArrayList<>();
-        String query = "SELECT * FROM Books WHERE status = 'available'";
+			case "2": // send user data
+				String id = inputs.get(1);
+				return UserInfo(id);
+			case "3": // book levy
 
-        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
-            while (rs.next()) {
-                int bookId = rs.getInt("book_id");
-                String bookName = rs.getString("book_name");
-                books.add("ID: " + bookId + ", Name: " + bookName);
-            }
-        }
+				return null;
+			case "4": // search books info
+				return BookInfo(inputs);
+			case "5": // :(
+				return null;
+			case "6":
+				return ReturnDatesCheck(inputs);
+			default:
+				Response.add("close");
+				return Response;
 
-        return books;
-    }
+			}
 
-    // Update the status of a book in the database
-    private static void updateBookStatus(int bookId, String status, int borrowerId) throws SQLException {
-        String query = "UPDATE Books SET status = ?, borrower_id = ? WHERE book_id = ?";
+		} else {
+			System.out.println("Received an empty ArrayList!");
+		}
+		return null;
 
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, status);
-            stmt.setInt(2, borrowerId);
-            stmt.setInt(3, bookId);
-            stmt.executeUpdate();
-        }
-    }
+	}
+
+	private static ArrayList<String> Login(ArrayList<String> inputs) throws SQLException {
+		ArrayList<String> result = new ArrayList<>();
+		String idString = inputs.get(1); // get id
+		String passwordString = inputs.get(2); // get password
+
+		try {
+			PreparedStatement ps = conn
+					.prepareStatement("SELECT password,admin_status FROM Subscriber WHERE subscriber_id = ?");
+			ps.setString(1, idString);
+			ResultSet rs = ps.executeQuery();
+
+			if (rs.next()) { // tests password
+				String dbPassword = rs.getString("password"); // gets the password from the query
+
+				if (dbPassword.equals(passwordString)) {
+
+					result.add(rs.getString("admin_status")); // id and password match
+					return result;
+				}
+			} // end if 1st
+		} // end try
+		catch (SQLException e) {
+			e.printStackTrace();
+			e.printStackTrace();
+			throw new SQLException("Error checking login users");
+		}
+
+		result.add("Wrong Credentials"); // id or password dont match
+		return result;
+	}
+
+	private static ArrayList<String> UpdateInfo(ArrayList<String> inputs) throws SQLException {
+		ArrayList<String> result = new ArrayList<>();
+		String idString = inputs.get(1); // get id
+		String phoneString = inputs.get(2); // get phone
+		String emailString = inputs.get(3); // get email
+
+		try {
+			// Check if the ID exists
+			String checkQuery = "SELECT COUNT(*) FROM Subscriber WHERE subscriber_id = ?";
+			PreparedStatement checkStmt = conn.prepareStatement(checkQuery);
+			checkStmt.setString(1, idString);
+			ResultSet rs = checkStmt.executeQuery();
+
+			rs.next(); // Move to the first row of the result
+			if (rs.getInt(1) == 0) {
+				// If no matching ID is found, return "fail"
+				result.add("fail");
+				return result;
+			}
+
+			// If the ID exists, proceed with the update
+			String updateQuery = "UPDATE Subscriber SET subscriber_phone_number = ?, subscriber_email = ? WHERE subscriber_id = ?";
+			PreparedStatement ps = conn.prepareStatement(updateQuery);
+			ps.setString(1, phoneString);
+			ps.setString(2, emailString);
+			ps.setString(3, idString);
+			ps.executeUpdate();
+
+			result.add("good");
+			return result;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return Fail(result);
+		}
+	}
+
+	private static ArrayList<String> UserInfo(String id) throws SQLException {
+		ArrayList<String> userDetails = new ArrayList<>();
+
+		try {
+			PreparedStatement ps;
+			System.out.println(id);
+
+			if (id.equals("all")) {
+				ps = conn.prepareStatement("SELECT * FROM Subscriber");
+			} else {
+				ps = conn.prepareStatement("SELECT * FROM Subscriber WHERE subscriber_id = ?");
+				ps.setString(1, id);
+			}
+
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				ResultSetMetaData metaData = rs.getMetaData();
+				int columnCount = metaData.getColumnCount();
+
+				userDetails.add("result");
+				for (int i = 1; i <= columnCount; i++) {
+					userDetails.add(rs.getString(i)); // Add each column value to the list
+				}
+			}
+			if (userDetails.isEmpty()) {
+				return Fail(userDetails);
+			}
+			return userDetails;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new SQLException("Error fetching user info");
+
+		}
+
+	}
+
+	private static ArrayList<String> BookInfo(ArrayList<String> inputs) throws SQLException {
+		ArrayList<String> bookDetails = new ArrayList<>();
+		String columName = inputs.get(1); // get method
+		String searchParameter = inputs.get(2); // get search info
+		try {
+
+			PreparedStatement ps;
+
+			switch (columName) {
+			case "book_name": // sql query for name
+				ps = conn.prepareStatement(
+						"SELECT book_name,status,return_date,location FROM Books WHERE book_name=? and next_borrower_id IS NULL"); // sql
+																																	// injection
+				break;
+
+			case "book_subjects": // sql query to choose just one of each book available > date > later date
+				ps = conn.prepareStatement(
+						"WITH ranked_books AS (SELECT b.book_name, b.status, b.return_date, b.location, ROW_NUMBER() OVER (PARTITION BY b.book_name ORDER BY CASE WHEN b.status = 'available' THEN 1 ELSE 2 END, b.return_date ASC) AS row_num FROM Books b WHERE FIND_IN_SET(?, b.book_subjects) > 0 AND b.next_borrower_id IS NULL) SELECT rb.book_name, rb.status, rb.return_date, rb.location FROM ranked_books rb WHERE rb.row_num = 1");
+				break;
+
+			case "book_description": // sql query to choose just one of each book available > date > later date
+				ps = conn.prepareStatement(
+						"WITH ranked_books AS (SELECT b.book_name, b.status, b.return_date, b.location, ROW_NUMBER() OVER (PARTITION BY b.book_name ORDER BY CASE WHEN b.status = 'available' THEN 1 ELSE 2 END, b.return_date ASC) AS row_num FROM Books b WHERE FIND_IN_SET(?, b.book_description) > 0 AND b.next_borrower_id IS NULL) SELECT rb.book_name, rb.status, rb.return_date, rb.location FROM ranked_books rb WHERE rb.row_num = 1");
+				break;
+
+			default:
+				ps = conn.prepareStatement("SELECT ? FROM false"); // do nothing but dont error
+
+			}
+
+			ps.setString(1, searchParameter);
+
+			ResultSet rs = ps.executeQuery();
+			System.out.println(rs);
+
+			while (rs.next()) {
+				ResultSetMetaData metaData = rs.getMetaData();
+				int columnCount = metaData.getColumnCount();
+				bookDetails.add("books");
+				for (int i = 1; i <= columnCount; i++) {
+					bookDetails.add(rs.getString(i)); // Add each column value to the list
+				}
+				System.out.println(bookDetails);
+
+			}
+			if (bookDetails.isEmpty()) {
+				return Fail(bookDetails);
+			}
+
+			return bookDetails;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new SQLException("Error fetching user info");
+
+		}
+
+	}
+
+	private static ArrayList<String> ReturnDatesCheck(ArrayList<String> date) throws SQLException {
+		ArrayList<String> MailerList = new ArrayList<>();
+		try {
+			String TmrDate = date.get(1); // get method
+
+			PreparedStatement ps;
+
+			ps = conn.prepareStatement("SELECT book_name,borrower_id FROM Books where return_date = ?"); // the checker
+
+			ps.setString(1, TmrDate);
+
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				ResultSetMetaData metaData = rs.getMetaData();
+				int columnCount = metaData.getColumnCount();
+				for (int i = 1; i <= columnCount; i++) {
+					MailerList.add(rs.getString(i)); // Add each column value to the list
+				}
+
+			}
+			if (MailerList.isEmpty()) {
+				return Fail(MailerList);
+			}
+
+			return MailerList;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new SQLException("Error fetching user info");
+		}
+	}
 }
