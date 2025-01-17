@@ -25,6 +25,7 @@ CREATE TABLE `Books` (
   `book_description` varchar(100) DEFAULT NULL,
   `status` varchar(10) NOT NULL,
   `borrower_id` int DEFAULT NULL,
+  `loan_date` date DEFAULT NULL,
   `return_date` date DEFAULT NULL,
   `location` varchar(30) DEFAULT NULL,
   `next_borrower_id` int DEFAULT NULL,
@@ -40,7 +41,7 @@ CREATE TABLE `Books` (
 
 LOCK TABLES `Books` WRITE;
 /*!40000 ALTER TABLE `Books` DISABLE KEYS */;
-INSERT INTO `Books` VALUES (1,'bookname','book subject,test,subject','tests for search of description','available',NULL,NULL,'location',NULL),(2,'name','book subject,test,subject','tests for search of description','borrowed',2,'2020-12-12','location',NULL),(3,'name','book subject,test,subject','tests for search of description','borrowed',2,'2020-12-12','location1',NULL),(4,'name','book subject,test,subject','tests for search of description','borrowed',2,'2020-12-12','location2',NULL),(9981,'back','java,cool,test,whatever','book that is very cool test','borrowed',1,'2012-11-11','china',NULL),(9982,'back','java,cool,test,whatever','book that is very cool test','available',NULL,NULL,'china2',NULL),(9991,'book','java,cool,test,whatever','book that is very cool test','borrowed',2,'2069-11-11','documentary-row:1-col:420',NULL),(12341,'java for dummies','programming,java,computers','book for begginers to start programming in java','available',NULL,NULL,'computers-row:5-col:5',NULL);
+INSERT INTO `Books` VALUES (1,'bookname','book subject,test,subject','tests for search of description','available',NULL,NULL,NULL,'location',NULL),(2,'name','book subject,test,subject','tests for search of description','borrowed',2,NULL,'2020-12-12','location',NULL),(3,'name','book subject,test,subject','tests for search of description','borrowed',2,NULL,'2020-12-12','location1',NULL),(4,'name','book subject,test,subject','tests for search of description','borrowed',2,NULL,'2020-12-12','location2',NULL),(9981,'back','java,cool,test,whatever','book that is very cool test','borrowed',1,NULL,'2012-11-11','china',NULL),(9982,'back','java,cool,test,whatever','book that is very cool test','available',NULL,NULL,NULL,'china2',NULL),(9991,'book','java,cool,test,whatever','book that is very cool test','borrowed',2,NULL,'2069-11-11','documentary-row:1-col:420',NULL),(12341,'java for dummies','programming,java,computers','book for begginers to start programming in java','available',NULL,NULL,NULL,'computers-row:5-col:5',NULL);
 /*!40000 ALTER TABLE `Books` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+    <!-- Output directory for compiled classes -->
+    <classpathentry kind="output" path="bin"/>
+
+    <!-- Source folder -->
+    <classpathentry kind="src" path="src"/>
+
+    <!-- Java runtime library -->
+    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+
+    <!-- External JAR file -->
+    <classpathentry kind="lib" path="lib/example-library.jar"/>
+
+    <!-- Project dependency -->
+    <classpathentry kind="src" path="/AnotherProject"/>
+</classpath>
