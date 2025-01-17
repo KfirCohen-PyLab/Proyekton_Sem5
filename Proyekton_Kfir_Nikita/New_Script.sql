@@ -1,10 +1,4 @@
-
 use project;
--- MySQL dump 10.13  Distrib 8.0.40, for Linux (x86_64)
---
--- Host: localhost    Database: project
--- ------------------------------------------------------
--- Server version	8.0.40-0ubuntu0.22.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -33,6 +27,7 @@ CREATE TABLE `Books` (
   `borrower_id` int DEFAULT NULL,
   `return_date` date DEFAULT NULL,
   `location` varchar(30) DEFAULT NULL,
+  `next_borrower_id` int DEFAULT NULL,
   PRIMARY KEY (`book_id`),
   KEY `borrower_id` (`borrower_id`),
   CONSTRAINT `Books_ibfk_1` FOREIGN KEY (`borrower_id`) REFERENCES `Subscriber` (`subscriber_id`)
@@ -45,7 +40,7 @@ CREATE TABLE `Books` (
 
 LOCK TABLES `Books` WRITE;
 /*!40000 ALTER TABLE `Books` DISABLE KEYS */;
-INSERT INTO `Books` VALUES (1,'bookname','book subject,test,subject','tests for search of description','available',NULL,NULL,'location'),(2,'name','book subject,test,subject','tests for search of description','borrowed',2,'2020-12-12','location'),(3,'name','book subject,test,subject','tests for search of description','borrowed',2,'2020-12-12','location1'),(4,'name','book subject,test,subject','tests for search of description','borrowed',2,'2020-12-12','location2'),(9981,'back','java,cool,test,whatever','book that is very cool test','borrowed',NULL,'2012-11-11','china'),(9982,'back','java,cool,test,whatever','book that is very cool test','available',NULL,NULL,'china2'),(9991,'book','java,cool,test,whatever','book that is very cool test','borrowed',2,'2069-11-11','documentary-row:1-col:420'),(12341,'java for dummies','programming,java,computers','book for begginers to start programming in java','available',NULL,NULL,'computers-row:5-col:5');
+INSERT INTO `Books` VALUES (1,'bookname','book subject,test,subject','tests for search of description','available',NULL,NULL,'location',NULL),(2,'name','book subject,test,subject','tests for search of description','borrowed',2,'2020-12-12','location',NULL),(3,'name','book subject,test,subject','tests for search of description','borrowed',2,'2020-12-12','location1',NULL),(4,'name','book subject,test,subject','tests for search of description','borrowed',2,'2020-12-12','location2',NULL),(9981,'back','java,cool,test,whatever','book that is very cool test','borrowed',1,'2012-11-11','china',NULL),(9982,'back','java,cool,test,whatever','book that is very cool test','available',NULL,NULL,'china2',NULL),(9991,'book','java,cool,test,whatever','book that is very cool test','borrowed',2,'2069-11-11','documentary-row:1-col:420',NULL),(12341,'java for dummies','programming,java,computers','book for begginers to start programming in java','available',NULL,NULL,'computers-row:5-col:5',NULL);
 /*!40000 ALTER TABLE `Books` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -85,7 +80,7 @@ CREATE TABLE `Subscriber` (
   `subscriber_phone_number` varchar(20) NOT NULL,
   `subscriber_email` varchar(40) NOT NULL,
   `password` varchar(30) NOT NULL,
-  `admin_status` int NOT NULL DEFAULT '0',
+  `account_status` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`subscriber_id`),
   KEY `detailed_subscription_history` (`detailed_subscription_history`),
   CONSTRAINT `Subscriber_ibfk_1` FOREIGN KEY (`detailed_subscription_history`) REFERENCES `History` (`detailed_subscription_history`)
@@ -98,7 +93,7 @@ CREATE TABLE `Subscriber` (
 
 LOCK TABLES `Subscriber` WRITE;
 /*!40000 ALTER TABLE `Subscriber` DISABLE KEYS */;
-INSERT INTO `Subscriber` VALUES (1,'tester',NULL,'1234567890','123@1.com','1234',1),(2,'pope',NULL,'6666666666','123@.com','1234',0),(316112176,'Kfir Cohen',NULL,'0542449218','kfirn13@gmail.com','1234',0),(318471216,'Guy Zamir',NULL,'0546818838','zamir123321@gmail.com','1234',0),(319006698,'Shani Fahima',NULL,'0528735203','shanii206f@gmail.com','1234',0),(321237406,'Nikita Konovalenko',NULL,'0542181112','nikitke@gmail.com','1234',0);
+INSERT INTO `Subscriber` VALUES (1,'tester',NULL,'1234567890','123@1.com','1234','admin'),(2,'pope',NULL,'6666666666','123@.com','1234','active'),(3,'badboy',NULL,'1234512345','email@mail.c','password','frozen'),(316112176,'Kfir Cohen',NULL,'0542449218','kfirn13@gmail.com','1234','active'),(318471216,'Guy Zamir',NULL,'0546818838','zamir123321@gmail.com','1234','active'),(319006698,'Shani Fahima',NULL,'0528735203','shanii206f@gmail.com','1234','active'),(321237406,'Nikita Konovalenko',NULL,'0542181112','nikitke@gmail.com','1234','active');
 /*!40000 ALTER TABLE `Subscriber` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -111,4 +106,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-11 14:48:18
+-- Dump completed on 2025-01-02 17:47:43
