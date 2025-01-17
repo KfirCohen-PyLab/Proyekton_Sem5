@@ -22,15 +22,14 @@ public class dbHandler {
     }
 
     // Process loan request with parameters
-    public static void processLoanRequest(int subscriberID, int barcode , String loanDate, String returnDate, String bookName) throws SQLException {
-        String query = "UPDATE books set(book_id, book_name, book_subjects, borrower_id, book_id, loan_date, return_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    public static void processLoanRequest(int borrowerID, int barcode, String loanDate, String returnDate) throws SQLException {
+        String query = "UPDATE set books (borrower_id, book_barcode, loan_date, return_date) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, barcode);
-            stmt.setString(2, bookName);
+            stmt.setInt(1, borrowerID);
+            stmt.setInt(2, barcode);
             stmt.setString(3, loanDate);
             stmt.setString(4, returnDate);
-            stmt.setInt(6, subscriberID);
             stmt.executeUpdate();
         }
     }
@@ -46,7 +45,7 @@ public class dbHandler {
 
         // Process different types of messages
         String action = msg.get(0);
-
+        System.out.println(action);
         switch (action) {
             case "getAvailableBooks":
                 response.addAll(getAvailableBooks());  // Retrieve list of available books
@@ -65,8 +64,7 @@ public class dbHandler {
                 int loanBarcode = Integer.parseInt(msg.get(2)); // Extract book barcode
                 String loanDate = msg.get(3); // Extract loan date
                 String returnDate = msg.get(4); // Extract return date
-                String bookName = msg.get(5);
-                processLoanRequest(loanSubscriberID, loanBarcode, loanDate, returnDate, bookName);  // Process loan request
+                processLoanRequest(loanSubscriberID, loanBarcode, loanDate, returnDate);  // Process loan request
                 response.add("Loan request processed successfully.");
                 break;
 

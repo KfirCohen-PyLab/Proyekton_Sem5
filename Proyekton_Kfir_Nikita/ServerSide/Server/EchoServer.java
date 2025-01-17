@@ -29,12 +29,12 @@ public class EchoServer extends AbstractServer {
             if (loanData.get(0).equals("loanRequest")) {
                 // Extract individual arguments
                 int bookId = Integer.parseInt(loanData.get(1)); // Assuming index 1 contains the book ID
-                int subscriberId = Integer.parseInt(loanData.get(2)); // Assuming index 2 contains the subscriber ID
+                int borrowerId = Integer.parseInt(loanData.get(2)); // Assuming index 2 contains the subscriber ID
                 String loanDate = loanData.get(3); // Assuming index 3 contains the loan date
                 String returnDate = loanData.get(4); // Assuming index 4 contains the return date
-                String bookName = loanData.get(5);
+
                 // Call processLoanRequest with the extracted values
-                dbHandler.processLoanRequest(bookId, subscriberId, loanDate, returnDate, bookName);
+                dbHandler.processLoanRequest(bookId, borrowerId, loanDate, returnDate);
 
                 // Send response back to the client (example response)
                 sendMessageToSpecificClient(client, "Loan request processed successfully.");

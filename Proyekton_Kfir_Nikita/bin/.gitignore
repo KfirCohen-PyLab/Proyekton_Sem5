@@ -1,4 +1,8 @@
-/logic/
-/gui/
-/Server/
+/bin/
 /client/
+/gui/
+/src/
+/GUI_Handler/
+/Server/
+/logic/
+/ocsf/

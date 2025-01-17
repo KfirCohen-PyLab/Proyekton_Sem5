@@ -19,17 +19,17 @@ DROP TABLE IF EXISTS `Books`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Books` (
-  `book_id` int NOT NULL,
-  `book_name` varchar(40) NOT NULL,
-  `book_subjects` varchar(100) NOT NULL,
-  `book_description` varchar(100) DEFAULT NULL,
-  `status` varchar(10) NOT NULL,
-  `borrower_id` int DEFAULT NULL,
-  `return_date` date DEFAULT NULL,
-  `location` varchar(30) DEFAULT NULL,
-  `next_borrower_id` int DEFAULT NULL,
-  PRIMARY KEY (`book_id`),
-  KEY `borrower_id` (`borrower_id`),
+  `book_id` BIGINT NOT NULL, 
+  `borrower_id` INT NOT NULL DEFAULT -1, 
+  `book_name` VARCHAR(100) NOT NULL, 
+  `book_subjects` VARCHAR(100) NOT NULL, 
+  `book_description` VARCHAR(255) DEFAULT NULL, 
+  `status` VARCHAR(20) NOT NULL, 
+  `loan_date` DATE DEFAULT NULL, 
+  `return_date` DATE DEFAULT NULL, 
+  `location` VARCHAR(50) DEFAULT NULL, 
+  `next_borrower_id` INT DEFAULT NULL,
+  PRIMARY KEY (`book_id`, `borrower_id`),
   CONSTRAINT `Books_ibfk_1` FOREIGN KEY (`borrower_id`) REFERENCES `Subscriber` (`subscriber_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -40,7 +40,17 @@ CREATE TABLE `Books` (
 
 LOCK TABLES `Books` WRITE;
 /*!40000 ALTER TABLE `Books` DISABLE KEYS */;
-INSERT INTO `Books` VALUES (1,'bookname','book subject,test,subject','tests for search of description','available',NULL,NULL,'location',NULL),(2,'name','book subject,test,subject','tests for search of description','borrowed',2,'2020-12-12','location',NULL),(3,'name','book subject,test,subject','tests for search of description','borrowed',2,'2020-12-12','location1',NULL),(4,'name','book subject,test,subject','tests for search of description','borrowed',2,'2020-12-12','location2',NULL),(9981,'back','java,cool,test,whatever','book that is very cool test','borrowed',1,'2012-11-11','china',NULL),(9982,'back','java,cool,test,whatever','book that is very cool test','available',NULL,NULL,'china2',NULL),(9991,'book','java,cool,test,whatever','book that is very cool test','borrowed',2,'2069-11-11','documentary-row:1-col:420',NULL),(12341,'java for dummies','programming,java,computers','book for begginers to start programming in java','available',NULL,NULL,'computers-row:5-col:5',NULL);
+INSERT INTO `Books` VALUES
+(9780061120084, 0, 'To Kill a Mockingbird – Harper Lee', 'fiction,classic,law', 'A novel about racial injustice in the Deep South', 'available', NULL, NULL, '1A', NULL),
+(9780141439518, 0, 'Pride and Prejudice – Jane Austen', 'romance,classic,society', 'A romantic novel about manners and marriage', 'available', NULL, NULL, '1B', NULL),
+(9780451524935, 0, '1984 – George Orwell', 'dystopia,politics,classic', 'A dystopian novel about totalitarianism', 'available', NULL, NULL, '1C', NULL),
+(9780743273565, 0, 'The Great Gatsby – F. Scott Fitzgerald', 'classic,wealth,romance', 'A novel about the American dream', 'available', NULL, NULL, '1D', NULL),
+(9781503280786, 0, 'Moby-Dick – Herman Melville', 'adventure,classic,sea', 'A story about a quest for a white whale', 'available', NULL, NULL, '1E', NULL),
+(9780141441146, 0, 'Jane Eyre – Charlotte Brontë', 'classic,romance,drama', 'A novel about a governess and her journey', 'available', NULL, NULL, '2A', NULL),
+(9780141439556, 0, 'Wuthering Heights – Emily Brontë', 'romance,gothic,classic', 'A tale of love and revenge on the Yorkshire moors', 'available', NULL, NULL, '2B', NULL),
+(9780316769488, 0, 'The Catcher in the Rye – J.D. Salinger', 'classic,coming-of-age', 'A story about teenage rebellion', 'available', NULL, NULL, '2C', NULL),
+(9780486415871, 0, 'Crime and Punishment – Fyodor Dostoevsky', 'philosophy,classic,crime', 'A psychological novel about guilt and redemption', 'available', NULL, NULL, '2D', NULL),
+(9780060850524, 0, 'Brave New World – Aldous Huxley', 'dystopia,science fiction', 'A dystopian story about a technologically advanced world', 'available', NULL, NULL, '2E', NULL);
 /*!40000 ALTER TABLE `Books` ENABLE KEYS */;
 UNLOCK TABLES;
 
