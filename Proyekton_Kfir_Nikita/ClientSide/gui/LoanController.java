@@ -66,21 +66,6 @@ public class LoanController {
 		retunrdate.setValue(LocalDate.now().plusWeeks(2));
 		retunrdate.setConverter(createDateConverter());
 
-		// Populate the book map with book barcodes and names
-		bookMap.put("9780061120084", "To Kill a Mockingbird – Harper Lee");
-		bookMap.put("9780141439518", "Pride and Prejudice – Jane Austen");
-		bookMap.put("9780451524935", "1984 – George Orwell");
-		bookMap.put("9780743273565", "The Great Gatsby – F. Scott Fitzgerald");
-		bookMap.put("9781503280786", "Moby-Dick – Herman Melville");
-		bookMap.put("9780141441146", "Jane Eyre – Charlotte Brontë");
-		bookMap.put("9780141439556", "Wuthering Heights – Emily Brontë");
-		bookMap.put("9780316769488", "The Catcher in the Rye – J.D. Salinger");
-		bookMap.put("9780486415871", "Crime and Punishment – Fyodor Dostoevsky");
-		bookMap.put("9780060850524", "Brave New World – Aldous Huxley");
-
-		// Populate the ListView with book names
-		BooksList.getItems().addAll(bookMap.values());
-
 		// Limit subscriber ID input to 9 numeric characters only
 		subscriberIDText.setTextFormatter(new TextFormatter<String>(change -> {
 			String newText = change.getControlNewText();
@@ -164,12 +149,12 @@ public class LoanController {
 	@FXML
 	public void SaveLoanerID(ActionEvent event) throws Exception {
 	    // Check if the subscriber ID is less than 9 characters
-	    String subscriberID = subscriberIDText.getText();
+	    String borrowerID = subscriberIDText.getText();
 	    String barcode = BarcodeText.getText();
 	    LocalDate loanDate = loandate.getValue();
 	    LocalDate returnDate = retunrdate.getValue();
 
-	    if (subscriberID.length() < 9) {
+	    if (borrowerID.length() < 9) {
 	        // Show error message if the ID is incomplete
 	        showError("Subscriber ID must be 9 digits long.");
 	    } else if (barcode.isEmpty() || !bookMap.containsKey(barcode)) {
@@ -180,7 +165,7 @@ public class LoanController {
 	        new Thread(() -> {
 	            try {
 	                // Send loan data to the server
-	                ClientUI.chat.sendLoanRequest(barcode, subscriberID, loanDate.toString(), returnDate.toString());
+	                ClientUI.chat.sendLoanRequest(barcode, borrowerID, loanDate.toString(), returnDate.toString());
 
 	                // Handle server response asynchronously
 	                ClientUI.chat.setResponseHandler(response -> {

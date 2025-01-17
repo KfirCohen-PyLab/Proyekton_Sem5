@@ -22,11 +22,11 @@ public class dbHandler {
     }
 
     // Process loan request with parameters
-    public static void processLoanRequest(int subscriberID, int barcode, String loanDate, String returnDate) throws SQLException {
-        String query = "UPDATE set books (subscriber_id, book_barcode, loan_date, return_date) VALUES (?, ?, ?, ?)";
+    public static void processLoanRequest(int borrowerID, int barcode, String loanDate, String returnDate) throws SQLException {
+        String query = "UPDATE set books (borrower_id, book_barcode, loan_date, return_date) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, subscriberID);
+            stmt.setInt(1, borrowerID);
             stmt.setInt(2, barcode);
             stmt.setString(3, loanDate);
             stmt.setString(4, returnDate);
@@ -45,7 +45,7 @@ public class dbHandler {
 
         // Process different types of messages
         String action = msg.get(0);
-
+        System.out.println(action);
         switch (action) {
             case "getAvailableBooks":
                 response.addAll(getAvailableBooks());  // Retrieve list of available books
