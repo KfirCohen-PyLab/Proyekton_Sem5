@@ -100,7 +100,7 @@ public class InfoController implements Initializable {
 		if (!(getID() == null)) {
 			dataToSend = Subscriber_Handler.DbDataGet(getID()); // Retrieves the data for the entered ID from the //
 																// database
-			extracted();
+			ClientUI.chat.accept(dataToSend); // Sends the request to the server
 			if (!(ChatClient.answer.equals("fail")) && ChatClient.list.size() != 0) {
 				ObservableList<Subscriber_Type> Newlist = FXCollections.observableArrayList();
 				for (int i = 0; i < (ChatClient.list.size() / 5); i++) {
@@ -118,10 +118,6 @@ public class InfoController implements Initializable {
 		} else {
 			info.setText("ID is empty");
 		}
-	}
-
-	private void extracted() {
-		ClientUI.chat.accept(dataToSend); // Sends the request to the server
 	}
 
 	/**

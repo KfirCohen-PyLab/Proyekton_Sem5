@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="615.0" prefWidth="587.0"
+	xmlns="http://javafx.com/javafx/23.0.1"
+	xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LoanController">
+	<children>
+		<Button id="btnExit" fx:id="btnExit" layoutX="538.0"
+			layoutY="576.0" mnemonicParsing="false" onAction="#getExitBtn"
+			text="Exit" />
+		<Button id="btnExit" fx:id="btnExit1" layoutX="24.0"
+			layoutY="576.0" mnemonicParsing="false" onAction="#getExitBtn"
+			text="Back" />
+		<ListView layoutX="24.0" layoutY="14.0" prefHeight="548.0"
+			prefWidth="221.0" />
+		<Button layoutX="259.0" layoutY="576.0" mnemonicParsing="false"
+			prefHeight="25.0" prefWidth="70.0" text="Barcode" />
+		<Label layoutX="252.0" layoutY="33.0" prefHeight="25.0"
+			prefWidth="70.0" text="loaner ID:" />
+		<TextField fx:id="loanerID" layoutX="329.0" layoutY="33.0"
+			promptText="Enter subscriber's ID" />
+		<Label layoutX="252.0" layoutY="66.0" prefHeight="25.0"
+			prefWidth="70.0" text="loan date:" />
+		<Label layoutX="252.0" layoutY="100.0" prefHeight="25.0"
+			prefWidth="70.0" text="return date:" />
+		<DatePicker fx:id="loandate" layoutX="329.0" layoutY="66.0" />
+		<DatePicker fx:id="retunrdate" layoutX="329.0"
+			layoutY="100.0" />
+	</children>
+</AnchorPane>
