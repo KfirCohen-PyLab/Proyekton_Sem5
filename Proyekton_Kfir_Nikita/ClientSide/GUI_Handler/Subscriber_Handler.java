@@ -2,6 +2,12 @@ package GUI_Handler;
 
 import java.util.ArrayList;
 
+import Types_For_Table_view.Book_type_available;
+import Types_For_Table_view.Subscriber_Type;
+import client.ChatClient;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 /**
  * The `Subscriber_Handler` class provides utility methods for handling
  * subscriber-related operations. These operations include login, updating
@@ -23,9 +29,11 @@ public class Subscriber_Handler {
 	 * @return An `ArrayList` containing the service type for login ("0").
 	 * @throws Exception if an error occurs during data preparation.
 	 */
-	public static ArrayList<String> Login() throws Exception {
+	public static ArrayList<String> Login(String user, String pass) throws Exception {
 		ArrayList<String> dataToSend = new ArrayList<>();
 		dataToSend.add("0"); // Service type for login
+		dataToSend.add(user); // Service type for login
+		dataToSend.add(pass); // Service type for login
 
 		return dataToSend;
 	}
@@ -79,4 +87,39 @@ public class Subscriber_Handler {
 		return dataToSend;
 	}
 
+	public static ObservableList<Subscriber_Type> DbBookInfoParse(ArrayList<String> listToParse) throws Exception {
+		ObservableList<Subscriber_Type> Newlist = FXCollections.observableArrayList();
+		for (int i = 0; i < (ChatClient.list.size() / 5); i++) {
+			String id = ChatClient.list.get(i * 5);
+			String name = ChatClient.list.get((i * 5) + 1);
+			String history = ChatClient.list.get((i * 5) + 2);
+			String phoneNumber = ChatClient.list.get((i * 5) + 3);
+			String email = ChatClient.list.get((i * 5) + 4);
+			Newlist.add(new Subscriber_Type(id, name, history, phoneNumber, email));
+		}
+		return Newlist;
+	}
+
+	public static ObservableList<Book_type_available> DbBookSearchAvailable(ArrayList<String> listToParse)
+			throws Exception {
+		ObservableList<Book_type_available> Newlist = FXCollections.observableArrayList();
+		for (int i = 0; i < (ChatClient.listAvailable.size() / 2); i++) {
+			// Loop through the list and construct the string for each subscriber
+			String name = ChatClient.listAvailable.get(i * 2);
+			String location = ChatClient.listAvailable.get((i * 2) + 1);
+			Newlist.add(new Book_type_available(name, location, null));
+		}
+		return Newlist;
+	}
+
+	public static ObservableList<Book_type_available> DbBookSearchBorrowed(ArrayList<String> listToParse)
+			throws Exception {
+		ObservableList<Book_type_available> Newlist = FXCollections.observableArrayList();
+		for (int i = 0; i < (ChatClient.listBorrowed.size() / 2); i++) {
+			String name = ChatClient.listBorrowed.get(i * 2);
+			String borrowed = ChatClient.listBorrowed.get((i * 2) + 1);
+			Newlist.add(new Book_type_available(name, null, borrowed));
+		}
+		return Newlist;
+	}
 }

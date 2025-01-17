@@ -44,23 +44,28 @@ public class InfoController implements Initializable {
 	@FXML
 	private Label info; // Label for displaying all retrieved information or status
 
+	@FXML
+	private TableView<Subscriber_Type> table;
+
+	@FXML
+	private TableColumn<Subscriber_Type, String> id;
+
+	@FXML
+	private TableColumn<Subscriber_Type, String> name;
+
+	@FXML
+	private TableColumn<Subscriber_Type, String> history;
+
+	@FXML
+	private TableColumn<Subscriber_Type, String> phonenumber;
+
+	@FXML
+	private TableColumn<Subscriber_Type, String> email;
+
 	// Getter method for retrieving the ID from the text field
 	private String getID() {
 		return txtId.getText(); // Returns the text from the input field
 	}
-
-	@FXML
-	private TableView<Subscriber_Type> table;
-	@FXML
-	private TableColumn<Subscriber_Type, String> id;
-	@FXML
-	private TableColumn<Subscriber_Type, String> name;
-	@FXML
-	private TableColumn<Subscriber_Type, String> history;
-	@FXML
-	private TableColumn<Subscriber_Type, String> phonenumber;
-	@FXML
-	private TableColumn<Subscriber_Type, String> email;
 
 	public void btnclose(ActionEvent event) throws Exception {
 		switchScreen.switchTo(event, "/gui/OptionFrame", "Option menu"); // Switches to Option menu screen
@@ -97,26 +102,16 @@ public class InfoController implements Initializable {
 	 *                   with the server
 	 */
 	public void getsendbtn(ActionEvent event) throws Exception {
-		if (!(getID() == null)) {
-			dataToSend = Subscriber_Handler.DbDataGet(getID()); // Retrieves the data for the entered ID from the //
-																// database
-			ClientUI.chat.accept(dataToSend); // Sends the request to the server
-			if (!(ChatClient.answer.equals("fail")) && ChatClient.list.size() != 0) {
-				ObservableList<Subscriber_Type> Newlist = FXCollections.observableArrayList();
-				for (int i = 0; i < (ChatClient.list.size() / 5); i++) {
-					String id = ChatClient.list.get(i * 5);
-					String name = ChatClient.list.get((i * 5) + 1);
-					String history = ChatClient.list.get((i * 5) + 2);
-					String phoneNumber = ChatClient.list.get((i * 5) + 3);
-					String email = ChatClient.list.get((i * 5) + 4);
-					Newlist.add(new Subscriber_Type(id, name, history, phoneNumber, email));
-				}
-				table.setItems(Newlist);
-			} else {
-				info.setText("Error, Couldn't find in DB");
-			}
+		dataToSend = Subscriber_Handler.DbDataGet(getID()); // Retrieves the data for the entered ID from the //
+															// database
+		ClientUI.chat.accept(dataToSend); // Sends the request to the server
+		if (ChatClient.answer.equals("Id found") && ChatClient.list.size() != 0) {
+			ObservableList<Subscriber_Type> Newlist = FXCollections.observableArrayList();
+			Newlist = Subscriber_Handler.DbBookInfoParse(ChatClient.list);
+			table.setItems(Newlist);
+			info.setText(ChatClient.answer.toString());
 		} else {
-			info.setText("ID is empty");
+			info.setText("Error, Couldn't find in DB");
 		}
 	}
 
@@ -131,15 +126,13 @@ public class InfoController implements Initializable {
 	public void getalldbtn(ActionEvent event) throws Exception {
 		dataToSend = Subscriber_Handler.DbDataGet("all"); // Retrieve all data
 		ClientUI.chat.accept(dataToSend); // Sends the request to the server
-		ObservableList<Subscriber_Type> Newlist = FXCollections.observableArrayList();
-		for (int i = 0; i < (ChatClient.list.size() / 5); i++) {
-			String id = ChatClient.list.get(i * 5);
-			String name = ChatClient.list.get((i * 5) + 1);
-			String history = ChatClient.list.get((i * 5) + 2);
-			String phoneNumber = ChatClient.list.get((i * 5) + 3);
-			String email = ChatClient.list.get((i * 5) + 4);
-			Newlist.add(new Subscriber_Type(id, name, history, phoneNumber, email));
+		if (!(ChatClient.answer.equals("fail")) && ChatClient.list.size() != 0) {
+			ObservableList<Subscriber_Type> Newlist = FXCollections.observableArrayList();
+			Newlist = Subscriber_Handler.DbBookInfoParse(ChatClient.list);
+			table.setItems(Newlist);
+			info.setText("Retrived All");
+		} else {
+			info.setText("Error, Couldn't find in DB");
 		}
-		table.setItems(Newlist);
 	}
 }

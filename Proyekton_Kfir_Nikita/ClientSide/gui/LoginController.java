@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import GUI_Handler.Subscriber_Handler;
 import GUI_Handler.switchScreen;
+import client.ChatClient;
 import client.ClientUI;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,6 +26,10 @@ public class LoginController {
 	@FXML
 	private TextField txtPort = null; // TextField for entering the server port number
 	@FXML
+	private TextField txtUser = null; // TextField for entering the server sP address
+	@FXML
+	private TextField txtPass = null; // TextField for entering the server port number
+	@FXML
 	private Label info; // Label to display messages or errors to the user
 
 	// Getter method for retrieving the port number
@@ -35,6 +40,16 @@ public class LoginController {
 	// Getter method for retrieving the IP address
 	private String getip() {
 		return txtIP.getText();
+	}
+
+	// Getter method for retrieving the IP address
+	private String getuser() {
+		return txtUser.getText();
+	}
+
+	// Getter method for retrieving the IP address
+	private String getpass() {
+		return txtPass.getText();
 	}
 
 	// Method called when the "Done" button is clicked
@@ -54,18 +69,20 @@ public class LoginController {
 			} else {
 				// Attempt to connect to the server with the provided IP and port
 				int portNumber = Integer.parseInt(port); // Convert port string to integer
-				ClientUI.connectToServer(ip, portNumber); // Attempt connection to the server
 				try {
-					ArrayList<String> dataToSend = new ArrayList<>();
-					dataToSend = Subscriber_Handler.Login(); // Fetch login data
-					ClientUI.chat.accept(dataToSend); // Send data to the server
+					ClientUI.connectToServer(ip, portNumber); // Attempt connection to the server
 				} catch (Exception E) {
-					info.setText("Connection Error, couldn't reach to server"); // Display error if server connection
-																				// fails
+					info.setText("Connection Error, couldn't reach to server Check credentials"); // Display error if //
+																									// server connection
 				}
-
-				// If all validations pass, switch to the Option menu screen
-				switchScreen.switchTo(event, "/gui/OptionFrame", "Option Menu");
+				ArrayList<String> dataToSend = new ArrayList<>();
+				dataToSend = Subscriber_Handler.Login(getuser(), getpass()); // Fetch login data
+				ClientUI.chat.accept(dataToSend); // Send data to the server
+				if (ChatClient.answer.equals("Wrong Credentials")) {
+					info.setText("Wrong Credentials");
+				} else {
+					switchScreen.switchTo(event, "/gui/OptionFrame", "Option Menu");
+				}
 			}
 		} catch (NumberFormatException e) {
 			info.setText("Invalid Input, Port must be a valid number");
@@ -89,4 +106,5 @@ public class LoginController {
 	public void getExitBtn(ActionEvent event) throws Exception {
 		switchScreen.switchTo(event, "/gui/ExitFrame", "Bye");
 	}
+
 }
