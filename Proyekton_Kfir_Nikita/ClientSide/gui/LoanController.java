@@ -166,6 +166,7 @@ public class LoanController {
 	    // Check if the subscriber ID is less than 9 characters
 	    String subscriberID = subscriberIDText.getText();
 	    String barcode = BarcodeText.getText();
+	    String bookName = bookMap.get(barcode);
 	    LocalDate loanDate = loandate.getValue();
 	    LocalDate returnDate = retunrdate.getValue();
 
@@ -180,7 +181,7 @@ public class LoanController {
 	        new Thread(() -> {
 	            try {
 	                // Send loan data to the server
-	                ClientUI.chat.sendLoanRequest(barcode, subscriberID, loanDate.toString(), returnDate.toString());
+	                ClientUI.chat.sendLoanRequest(barcode, subscriberID, loanDate.toString(), returnDate.toString(), bookName.toString());
 
 	                // Handle server response asynchronously
 	                ClientUI.chat.setResponseHandler(response -> {

@@ -27,7 +27,7 @@ public class ClientController implements ChatIF {
     }
 
     // Sends the loan request to the server
-    public void sendLoanRequest(String barcode, String subscriberID, String loanDate, String returnDate) {
+    public void sendLoanRequest(String barcode, String subscriberID, String loanDate, String returnDate, String bookName) {
         // Prepare the loan request message (example format)
         String message = String.format("loanRequest|%s|%s|%s|%s", barcode, subscriberID, loanDate, returnDate);
 
